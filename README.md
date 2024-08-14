@@ -1,0 +1,38 @@
+|-- data/
+|   |-- raw/                  # raw data
+|   |-- processed/            # processed data
+|
+|-- logs/                     # logs folder
+|   |-- log.txt
+|
+|-- losses/                   # losses package initialization
+|   |-- __init__.py
+|
+|-- metrics/                  # metics package initilaztion
+|   |-- __init__.py
+|
+|-- models/
+|   |-- __init__.py           # model package initialization
+|   |-- model.py              # model definition
+|   |-- ...                   # other model files
+|
+|-- utils/
+|   |-- __init__.py           # utilities package initialization
+|   |-- utils.py              # utility functions
+|   |-- ...                   # other utility files
+|
+|-- notebooks/
+|   |-- exploratory.ipynb     # notebook for data exploration
+|   |-- ...                   # other notebooks
+|
+|-- scripts/
+|   |-- train.py              # script to train the model
+|   |-- test.py               # script to test the model
+|   |-- evaluate.py           # script to evaluate model
+|   |-- ...                   # other scripts
+|
+|-- config.py                 # configuration file
+|-- main.py                   # main script to run the project
+|-- requirements.txt          # list of project dependencies
+|-- README.md                 # project documentation
+|-- .gitignore                # git ignore file
