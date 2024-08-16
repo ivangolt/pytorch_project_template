@@ -1,8 +1,15 @@
 """Dataloaders module"""
 import os
 from torchvision.io import read_image
+from torch.utils.data import Dataset
+
 
 class MnistDataset(Dataset):
+    """Class for loading dataset from path with using torch transforms
+
+    Args:
+        Dataset (_type_): _description_
+    """
 
     def __init__(self, path, transform=None):
         self.path = path
