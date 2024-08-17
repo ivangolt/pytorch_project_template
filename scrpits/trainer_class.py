@@ -1,28 +1,32 @@
+import logging
 import os
 
-import matplotlib.pyplot as plt
 import torch
+from torch import nn
+from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-plt.style.use("ggplot")
+logging.basicConfig(level=logging.INFO)
 
 
 class Trainer:
-    """Class implement process of training model"""
+    """Class for training process"""
 
     def __init__(
         self,
-        model,
-        optimizer,
-        criterion,
-        train_loader,
-        val_loader,
-        num_epochs=10,
-        cuda: bool = True,
+        model: nn.Module,
+        optimizer: torch.optim,
+        criterion: nn.Module,
+        train_loader: DataLoader,
+        val_loader: DataLoader,
+        num_epochs: int = 10,
+        device: str = "cpu",
     ):
-        self.cuda = cuda
+        # self.cuda = cuda
+        self.device = device
         self.model = model
-        self.model = self.model.cuda() if self.cuda else self.model.to("cpu")
+        self.model = self.model.to(self.device)
+        # self.model = self.model.cuda() if self.cuda else self.model.to("cpu")
 
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -40,6 +44,7 @@ class Trainer:
         self.save_best_model = SaveBestModel()
 
     def train(self, save_model=True):
+        logging.info("Starting traing on: {self.device}")
         for epoch in range(self.num_epochs):
             self.model.train()
             running_loss = 0.0
@@ -55,10 +60,10 @@ class Trainer:
                 # Zero the parameter gradients
                 self.optimizer.zero_grad()
 
-                if self.cuda:
-                    inputs = inputs.cuda()
-                    labels = labels.cuda()
-
+                # if self.cuda:
+                #     inputs = inputs.cuda()
+                #     labels = labels.cuda()
+                inputs, labels = inputs.to(self.device), labels.to(self.device)
                 # Forward pass
                 outputs = self.model(inputs)
                 loss = self.criterion(outputs, labels)
@@ -149,7 +154,7 @@ class SaveBestModel:
                     "optimizer_state_dict": optimizer.state_dict(),
                     "loss": criterion,
                 },
-                "outputs/best_model.pth",
+                "./models/best_model.pth",
             )
 
             torch.save(model, "./models/best_model.pth")

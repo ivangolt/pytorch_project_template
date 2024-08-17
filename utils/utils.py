@@ -2,6 +2,8 @@
 
 import matplotlib.pyplot as plt
 
+plt.style.use("ggplot")
+
 
 def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     """
@@ -14,7 +16,7 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     plt.xlabel("Epochs")
     plt.ylabel("Accuracy")
     plt.legend()
-    plt.savefig("outputs/accuracy.png")
+    plt.savefig("./results/accuracy.png")
 
     # loss plots
     plt.figure(figsize=(10, 7))
@@ -23,4 +25,4 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     plt.xlabel("Epochs")
     plt.ylabel("Loss")
     plt.legend()
-    plt.savefig("outputs/loss.png")
+    plt.savefig("./results/loss.png")
