@@ -1,21 +1,21 @@
 """create dataloader using template Dataset"""
-from dataloaders.dataset import MnistDataset
-from torch.utils.data import DataLoader
-from torchvision import transforms
-from torchvision.transforms import v2
-import torch
-
 
 import logging
+
+from torch.utils.data import DataLoader
+from torchvision.transforms import v2
+
+from dataloaders.dataset import MnistDataset
 
 logging.basicConfig(level=logging.INFO)
 
 
-def create_dataloader(train_path: str, 
-                      test_path: str,
-                      transform: v2.Compose,
-                      batch_size: int,
-                      ):
+def create_dataloader(
+    train_path: str,
+    test_path: str,
+    transform: v2.Compose,
+    batch_size: int,
+):
     """Creates training and testing DataLoaders.
 
      Takes in a training directory and testing directory path and turns
@@ -39,7 +39,6 @@ def create_dataloader(train_path: str,
                              )
     """
 
-
     logging.info("Starting load train dataset from 'train path'")
     train_data = MnistDataset(path=train_path, transform=transform)
     logging.info("Load train dataset from 'train path'")
@@ -47,33 +46,36 @@ def create_dataloader(train_path: str,
     logging.info("Starting load test dataset from 'test path'")
     test_data = MnistDataset(path=test_path, transform=transform)
     logging.info("Load train dataset from 'test path'")
-    
-    train_dataloader = DataLoader(dataset= train_data,batch_size=batch_size, shuffle=True)
-    test_dataloader = DataLoader(dataset= test_data,batch_size=batch_size, shuffle=False)
 
-
+    train_dataloader = DataLoader(
+        dataset=train_data, batch_size=batch_size, shuffle=True
+    )
+    test_dataloader = DataLoader(
+        dataset=test_data, batch_size=batch_size, shuffle=False
+    )
 
     return train_dataloader, test_dataloader
 
 
 # # for test
 # transforms = v2.Compose(
-#     [   v2.Resize(size = (224,224)),
+#     [
+#         v2.Resize(size=(224, 224)),
 #         v2.ToImage(),
 #         v2.ToDtype(torch.float32, scale=True),
-#         v2.Normalize(mean=(0.5, ), std=(0.5, ))
-    
+#         v2.Normalize(mean=(0.5,), std=(0.5,)),
 #     ]
 # )
 
-# train_dataloader, test_dataloader = create_dataloader(train_path="./data/mnist/train",
-#                                                       test_path="./data/mnist/test",
-#                                                       transform=transforms,
-#                                                       batch_size=1)
+# train_dataloader, test_dataloader = create_dataloader(
+#     train_path="./data/mnist/train",
+#     test_path="./data/mnist/test",
+#     transform=transforms,
+#     batch_size=1,
+# )
 
 # train_features, train_labels = next(iter(train_dataloader))
 # print(f"Feature batch shape: {train_features.size()}, train label: {train_labels[0]}")
-
 
 
 # test_features, test_labels = next(iter(test_dataloader))
