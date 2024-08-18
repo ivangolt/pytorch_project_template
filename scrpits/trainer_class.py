@@ -22,11 +22,9 @@ class Trainer:
         num_epochs: int = 10,
         device: str = "cpu",
     ):
-        # self.cuda = cuda
         self.device = device
         self.model = model
         self.model = self.model.to(self.device)
-        # self.model = self.model.cuda() if self.cuda else self.model.to("cpu")
 
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -41,7 +39,9 @@ class Trainer:
         self.val_accs = []
         self.val_losses = []
 
-        self.save_best_model = SaveBestModel(name_of_model=model.__class__.__name__)
+        self.save_best_model = SaveBestModel(
+            name_of_model=model.__class__.__name__, device=self.device
+        )
 
     def train(self, save_model=True):
         logging.info(f"Starting traing on: {self.device}")
@@ -60,9 +60,6 @@ class Trainer:
                 # Zero the parameter gradients
                 self.optimizer.zero_grad()
 
-                # if self.cuda:
-                #     inputs = inputs.cuda()
-                #     labels = labels.cuda()
                 inputs = inputs.to(self.device)
                 labels = labels.to(self.device)
 
@@ -128,7 +125,9 @@ class Trainer:
         loss = running_loss / len(self.val_loader)
         accuracy = 100 * correct / total
 
-        print(f"Validation Accuracy: {accuracy}% and Loss: {loss}")
+        print(
+            f"Epoch : {epoch+1}/{self.num_epochs} Validation Accuracy: {accuracy}% and Loss: {loss}"
+        )
         return accuracy, loss
 
 
@@ -139,16 +138,22 @@ class SaveBestModel:
     model state.
     """
 
-    def __init__(self, best_valid_loss=float("inf"), name_of_model: str = None):
+    def __init__(
+        self,
+        best_valid_loss=float("inf"),
+        name_of_model: str = None,
+        device: str = "cpu",
+    ):
         self.best_valid_loss = best_valid_loss
         self.name_of_model = name_of_model
+        self.device = device
         os.makedirs("outputs", exist_ok=True)
 
     def __call__(self, current_valid_loss, epoch, model, optimizer, criterion):
         if current_valid_loss < self.best_valid_loss:
             self.best_valid_loss = current_valid_loss
-            print(f"Best validation loss: {self.best_valid_loss}")
-            print(f"Saving best model for epoch: {epoch+1}\n")
+            logging.info(f"Best validation loss: {self.best_valid_loss}")
+            logging.info(f"Saving best model for epoch: {epoch+1}\n")
             torch.save(
                 {
                     "epoch": epoch + 1,
@@ -159,20 +164,21 @@ class SaveBestModel:
                 f=f"./outputs/models/{self.name_of_model}.pth",
             )
             # Create a dummy input tensor with the correct shape
-            # dummy_input = torch.randn(1, 1, 28, 28).to()
+            dummy_input = torch.randn(1, 1, 28, 28).to(self.device)
 
             # Export the model to ONNX format
-            # torch.onnx.export(
-            #     model,  # model being run
-            #     # dummy_input,  # model input (or a tuple for multiple inputs)
-            #     f=f"./outputs/models/{self.name_of_model}.onnx",  # where to save the model (can be a file or file-like object)
-            #     export_params=True,  # store the trained parameter weights inside the model file
-            #     opset_version=11,  # the ONNX version to export the model to
-            #     do_constant_folding=True,  # whether to execute constant folding for optimization
-            #     input_names=["input"],  # the model's input names
-            #     output_names=["output"],  # the model's output names
-            #     dynamic_axes={
-            #         "input": {0: "batch_size"},  # variable length axes
-            #         "output": {0: "batch_size"},
-            #     },
-            #  )
+            torch.onnx.export(
+                model,  # model being run
+                dummy_input,  # model input (or a tuple for multiple inputs)
+                f=f"./outputs/models/{self.name_of_model}.onnx",  # where to save the model (can be a file or file-like object)
+                export_params=True,  # store the trained parameter weights inside the model file
+                opset_version=11,  # the ONNX version to export the model to
+                do_constant_folding=True,  # whether to execute constant folding for optimization
+                input_names=["input"],  # the model's input names
+                output_names=["output"],  # the model's output names
+                dynamic_axes={
+                    "input": {0: "batch_size"},  # variable length axes
+                    "output": {0: "batch_size"},
+                },
+            )
+            logging.info("Save best model in onnx format")

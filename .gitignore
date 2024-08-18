@@ -4,3 +4,6 @@ venv/
 *.pyc
 /pycache/
 .ruff_cache/
+*.pth
+*.onnx
+outputs/models/
