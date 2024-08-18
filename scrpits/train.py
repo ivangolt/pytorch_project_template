@@ -5,7 +5,7 @@ import torch.optim as optim
 from torch import nn
 
 from dataloaders.data_loaders import create_dataloader
-from models.torch_models import LeNet5, MnistModel
+from models.torch_models import CNN, LeNet5, MnistModel
 from scrpits.trainer_class import Trainer
 from utils.transforms import transforms
 
@@ -34,6 +34,8 @@ if args.model.lower() == "lenet":
     model = LeNet5(num_classes=10)
 elif args.model.lower() == "mnist_model":
     model = MnistModel()
+elif args.model.lower() == "cnn":
+    model = CNN()
 else:
     raise ValueError(f"Unsupported model: {args.model}")
 

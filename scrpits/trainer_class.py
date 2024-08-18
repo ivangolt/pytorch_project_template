@@ -63,7 +63,9 @@ class Trainer:
                 # if self.cuda:
                 #     inputs = inputs.cuda()
                 #     labels = labels.cuda()
-                inputs, labels = inputs.to(self.device), labels.to(self.device)
+                inputs = inputs.to(self.device)
+                labels = labels.to(self.device)
+
                 # Forward pass
                 outputs = self.model(inputs)
                 loss = self.criterion(outputs, labels)
@@ -113,9 +115,8 @@ class Trainer:
         with torch.inference_mode():
             running_loss = 0.0
             for inputs, labels in self.val_loader:
-                if self.cuda:
-                    inputs = inputs.cuda()
-                    labels = labels.cuda()
+                inputs = inputs.to(self.device)
+                labels = labels.to(self.device)
                 outputs = self.model(inputs)
                 loss = self.criterion(outputs, labels)
                 running_loss += loss.item()

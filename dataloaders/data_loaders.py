@@ -55,28 +55,3 @@ def create_dataloader(
     )
 
     return train_dataloader, test_dataloader
-
-
-# # for test
-# transforms = v2.Compose(
-#     [
-#         v2.Resize(size=(224, 224)),
-#         v2.ToImage(),
-#         v2.ToDtype(torch.float32, scale=True),
-#         v2.Normalize(mean=(0.5,), std=(0.5,)),
-#     ]
-# )
-
-# train_dataloader, test_dataloader = create_dataloader(
-#     train_path="./data/mnist/train",
-#     test_path="./data/mnist/test",
-#     transform=transforms,
-#     batch_size=1,
-# )
-
-# train_features, train_labels = next(iter(train_dataloader))
-# print(f"Feature batch shape: {train_features.size()}, train label: {train_labels[0]}")
-
-
-# test_features, test_labels = next(iter(test_dataloader))
-# print(f"Feature test batch shape: {test_features.size()}, test label: {test_labels[0]}")
