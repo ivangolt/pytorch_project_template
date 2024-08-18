@@ -27,8 +27,10 @@
 |
 |-- scripts/
 |   |-- train.py              # script to train the model
-|   |-- test.py               # script to test the model
-|   |-- evaluate.py           # script to evaluate model
+|   |-- train_class.py        # script to implement training proccess
+|       |-- Trainer           # class realizing training and validating model
+|       |-- SaveBestModel     # class realizing saving best model in onnx format for faster inference and .pth format
+|   |-- inference.py          # script to reliaze inference with onnxruntime
 |   |-- ...                   # other scripts
 |
 |-- config.py                 # configuration file

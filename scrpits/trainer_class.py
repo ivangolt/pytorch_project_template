@@ -41,10 +41,10 @@ class Trainer:
         self.val_accs = []
         self.val_losses = []
 
-        self.save_best_model = SaveBestModel()
+        self.save_best_model = SaveBestModel(name_of_model=model.__class__.__name__)
 
     def train(self, save_model=True):
-        logging.info("Starting traing on: {self.device}")
+        logging.info(f"Starting traing on: {self.device}")
         for epoch in range(self.num_epochs):
             self.model.train()
             running_loss = 0.0
@@ -139,8 +139,9 @@ class SaveBestModel:
     model state.
     """
 
-    def __init__(self, best_valid_loss=float("inf")):
+    def __init__(self, best_valid_loss=float("inf"), name_of_model: str = None):
         self.best_valid_loss = best_valid_loss
+        self.name_of_model = name_of_model
         os.makedirs("outputs", exist_ok=True)
 
     def __call__(self, current_valid_loss, epoch, model, optimizer, criterion):
@@ -155,7 +156,23 @@ class SaveBestModel:
                     "optimizer_state_dict": optimizer.state_dict(),
                     "loss": criterion,
                 },
-                "./models/best_model.pth",
+                f=f"./outputs/models/{self.name_of_model}.pth",
             )
+            # Create a dummy input tensor with the correct shape
+            # dummy_input = torch.randn(1, 1, 28, 28).to()
 
-            torch.save(model, "./models/best_model.pth")
+            # Export the model to ONNX format
+            # torch.onnx.export(
+            #     model,  # model being run
+            #     # dummy_input,  # model input (or a tuple for multiple inputs)
+            #     f=f"./outputs/models/{self.name_of_model}.onnx",  # where to save the model (can be a file or file-like object)
+            #     export_params=True,  # store the trained parameter weights inside the model file
+            #     opset_version=11,  # the ONNX version to export the model to
+            #     do_constant_folding=True,  # whether to execute constant folding for optimization
+            #     input_names=["input"],  # the model's input names
+            #     output_names=["output"],  # the model's output names
+            #     dynamic_axes={
+            #         "input": {0: "batch_size"},  # variable length axes
+            #         "output": {0: "batch_size"},
+            #     },
+            #  )
