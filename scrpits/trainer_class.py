@@ -126,7 +126,7 @@ class Trainer:
         accuracy = 100 * correct / total
 
         print(
-            f"Epoch : {epoch+1}/{self.num_epochs} Validation Accuracy: {accuracy}% and Loss: {loss}"
+            f"Epoch :  Validation Accuracy on this epoch: {accuracy}% and Loss: {loss}"
         )
         return accuracy, loss
 
@@ -153,7 +153,7 @@ class SaveBestModel:
         if current_valid_loss < self.best_valid_loss:
             self.best_valid_loss = current_valid_loss
             logging.info(f"Best validation loss: {self.best_valid_loss}")
-            logging.info(f"Saving best model for epoch: {epoch+1}\n")
+            logging.info(f"Saving best model for epoch: {epoch+1}/n")
             torch.save(
                 {
                     "epoch": epoch + 1,

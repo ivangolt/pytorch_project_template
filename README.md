@@ -38,3 +38,11 @@
 |-- requirements.txt          # list of project dependencies
 |-- README.md                 # project documentation
 |-- .gitignore                # git ignore file
+
+
+# TO DO:
+- Reduce on plateau
+- early stoppin
+- argparse inference
+- using calculate_metric() in train_class
+- batch_inference

@@ -31,7 +31,7 @@ def create_dataloader(
     A tuple of (train_dataloader, test_dataloader).
     Where class_names is a list of the target classes.
     Example usage:
-      train_dataloader, test_dataloader = \
+      train_dataloader, test_dataloader = /
         = create_dataloaders(train_dir=path/to/train_dir,
                              test_dir=path/to/test_dir,
                              transform=some_transform,
