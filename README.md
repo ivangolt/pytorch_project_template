@@ -42,7 +42,8 @@
 
 # TO DO:
 - Reduce on plateau
-- early stoppin
-- argparse inference
+- early stopping
+- argparse inference - Done
 - using calculate_metric() in train_class
 - batch_inference
+- add graphics of training
