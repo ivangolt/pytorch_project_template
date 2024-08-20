@@ -3,6 +3,7 @@ import os
 
 import torch
 from torch import nn
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
@@ -45,6 +46,11 @@ class Trainer:
 
     def train(self, save_model=True):
         logging.info(f"Starting traing on: {self.device}")
+
+        scheduler = ReduceLROnPlateau(
+            self.optimizer, mode="min", factor=0.1, patience=5, verbose=True
+        )
+
         for epoch in range(self.num_epochs):
             self.model.train()
             running_loss = 0.0
@@ -89,6 +95,14 @@ class Trainer:
             epoch_acc = 100 * correct / total
             self.train_losses.append(epoch_loss)
             self.train_accs.append(epoch_acc)
+
+            scheduler.step(epoch_loss)
+
+            # Log the current learning rate
+            lr_rate = self.optimizer.param_groups[0]["lr"]
+            logging.info(
+                f"Epoch [{epoch+1}/{self.num_epochs}], Loss: {epoch_loss:.4f}, Accuracy: {epoch_acc:.2f}%, Learning Rate: {lr_rate:.6f}"
+            )
 
             # Validate the model
             val_acc, val_loss = self.validate()
