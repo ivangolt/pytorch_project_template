@@ -40,10 +40,15 @@
 |-- .gitignore                # git ignore file
 
 
+# Run train a model
+```python .\scripts\train.py --model lenet --optimizer adam --batch_size 64 --lr 0.01 --num_epochs 1 --device cuda```
+
+# Run inference a model
+```python .\scripts\inference.py --model_name lenet --image_path "image path"```
+
 # TO DO:
-- Reduce on plateau
-- early stopping
+- Reduce on plateau - Done
+- early stopping - Done
 - argparse inference - Done
-- using calculate_metric() in train_class
-- batch_inference
+- using calculate_metric() in train_class - Done
 - add graphics of training
