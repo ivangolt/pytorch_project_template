@@ -7,8 +7,6 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from metrics.metric import calculate_accuracy
-
 logging.basicConfig(level=logging.INFO)
 
 
@@ -81,16 +79,16 @@ class Trainer:
 
                 running_loss += loss.item()
 
-                # # Calculate accuracy
-                # _, predicted = torch.max(outputs.data, 1)
-                # total += labels.size(0)
-                # correct += (predicted == labels).sum().item()
-                accuracy = calculate_accuracy(outputs=outputs, labels=labels)
+                # Calculate accuracy
+                _, predicted = torch.max(outputs.data, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+                # accuracy = calculate_accuracy(outputs=outputs, labels=labels)
 
                 # Update progress bar
                 progress_bar.set_postfix(
                     Loss=f"{round(loss.item(),4)}",
-                    Accuracy=f"{round((accuracy),3)}",
+                    Accuracy=f"{round((100 * correct / total),3)}",
                 )
 
             # Store and print average loss and accuracy per epoch
